@@ -1,7 +1,9 @@
+import { useState } from 'react';
+
 function Login({ usuarios, setUsuarioActual, setPagina }) {
-  const [correo, setCorreo] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [error, setError] = React.useState('');
+  const [correo, setCorreo] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   function iniciarSesion(e) {
     e.preventDefault();
