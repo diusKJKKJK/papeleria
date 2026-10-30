@@ -495,3 +495,28 @@ background: #f5e0e0;
 font-family: var(--fuente);
 font-weight: 700;
 }
+.contacto {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.contacto h2 {
+  color: var(--naranja);
+  font-size: 2.5rem;
+}
+
+.contacto-tarjeta {
+  background: #f5e0e0;
+  padding: 2rem;
+  margin: 1.5rem;
+  border-radius: 25px;
+}
+
+.contacto-tarjeta a {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #9b4d75;
+  font-weight: bold;
+}

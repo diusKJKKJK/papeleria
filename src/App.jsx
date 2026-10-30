@@ -1,146 +1,245 @@
 import { useState } from 'react';
-import './App.css';
+import { PRODUCTOS } from './productos';
+
 import Registro from './Registro';
 import Login from './Login';
 import Catalogo from './Catalogo';
 import Inicio from './inicio';
 import Carrito from './Carrito';
 import Finalizar from './Finalizar';
-import { PRODUCTOS } from './productos';
+import Contacto from './Contacto';
+
+import './App.css';
 
 function App() {
-const [pagina, setPagina] = useState('login');
-const [usuarios, setUsuarios] = useState([]);
-const [usuarioActual, setUsuarioActual] = useState(null);
-const [carrito, setCarrito] = useState([]);
-const [favoritos, setFavoritos] = useState([]);
+  const [pagina, setPagina] = useState('login');
+  const [usuarios, setUsuarios] = useState([]);
+  const [usuarioActual, setUsuarioActual] = useState(null);
+  const [carrito, setCarrito] = useState([]);
+  const [favoritos, setFavoritos] = useState([]);
 
-const paginasProtegidas = ['catalogo', 'carrito', 'finalizar', 'tramites'];
+  const paginasProtegidas = [
+    'catalogo',
+    'carrito',
+    'finalizar',
+    'tramites'
+  ];
 
-const paginaMostrada =
-paginasProtegidas.includes(pagina) && !usuarioActual ? 'login' : pagina;
+  const paginaMostrada =
+    paginasProtegidas.includes(pagina) && !usuarioActual
+      ? 'login'
+      : pagina;
 
-const agregarAlCarrito = (producto) => {
-const existe = carrito.find((item) => item.id === producto.id);
+  function agregarAlCarrito(producto) {
+    if (producto.stock === 0) return;
 
-```
-if (existe) {
-  setCarrito(carrito.map((item) =>
-    item.id === producto.id
-      ? { ...item, cantidad: item.cantidad + 1 }
-      : item
-  ));
-} else {
-  setCarrito([...carrito, { id: producto.id, cantidad: 1 }]);
-}
-```
+    setCarrito((actual) => {
+      const existe = actual.find((p) => p.id === producto.id);
 
-};
+      if (existe) {
+        if (existe.cantidad >= producto.stock) return actual;
 
-const quitarDelCarrito = (id) => {
-setCarrito(carrito.filter((item) => item.id !== id));
-};
+        return actual.map((p) =>
+          p.id === producto.id
+            ? { ...p, cantidad: p.cantidad + 1 }
+            : p
+        );
+      }
 
-const vaciarCarrito = () => setCarrito([]);
+      return [...actual, { ...producto, cantidad: 1 }];
+    });
+  }
 
-const cambiarFavorito = (id) => {
-setFavoritos((actuales) =>
-actuales.includes(id)
-? actuales.filter((favorito) => favorito !== id)
-: [...actuales, id]
-);
-};
+  function quitarDelCarrito(id) {
+    setCarrito((actual) => actual.filter((p) => p.id !== id));
+  }
 
-const totalArticulos = carrito.reduce(
-(suma, item) => suma + item.cantidad, 0
-);
+  function vaciarCarrito() {
+    setCarrito([]);
+  }
 
-return ( <div className="app"> <header className="banner"> <h1>PAPELERÍA ARCOÍRIS</h1> </header>
+  function cambiarFavorito(producto) {
+    setFavoritos((actual) =>
+      actual.some((p) => p.id === producto.id)
+        ? actual.filter((p) => p.id !== producto.id)
+        : [...actual, producto]
+    );
+  }
 
-```
-  <nav className="nav">
-    <button className="nav-link morado" onClick={() => setPagina('inicio')}>Inicio</button>
-    <button className="nav-link celeste" onClick={() => setPagina('login')}>Login</button>
-    <button className="nav-link rosa" onClick={() => setPagina('registro')}>Registro</button>
-    <button className="nav-link naranja" onClick={() => setPagina('catalogo')}>Catálogo</button>
-    <button className="nav-link verde" onClick={() => setPagina('carrito')}>
-      Carrito{totalArticulos > 0 && ` (${totalArticulos})`}
-    </button>
-    <button className="nav-link rosa" onClick={() => setPagina('promociones')}>Promociones</button>
-    <button className="nav-link morado" onClick={() => setPagina('favoritos')}>
-      Favoritos ❤️ ({favoritos.length})
-    </button>
-  </nav>
+  const totalArticulos = carrito.reduce(
+    (total, p) => total + p.cantidad,
+    0
+  );
 
-  <main>
-    {paginaMostrada === 'inicio' && (
-      <Inicio usuarioActual={usuarioActual} irA={setPagina} />
-    )}
+  return (
+    <div className="app">
 
-    {paginaMostrada === 'login' && (
-      <Login irA={setPagina} usuarios={usuarios} setUsuarioActual={setUsuarioActual} />
-    )}
+      <header className="banner">
+        <h1>🌈 PAPELERÍA ARCOÍRIS</h1>
+        <p>Todo lo que necesitas en un solo lugar</p>
+      </header>
 
-    {paginaMostrada === 'registro' && (
-      <Registro irA={setPagina} usuarios={usuarios} setUsuarios={setUsuarios} setUsuarioActual={setUsuarioActual} />
-    )}
+      <nav className="nav">
+        <button className="nav-link" onClick={() => setPagina('inicio')}>
+          Inicio
+        </button>
 
-    {paginaMostrada === 'catalogo' && (
-      <Catalogo agregar={agregarAlCarrito} favoritos={favoritos} cambiarFavorito={cambiarFavorito} />
-    )}
+        <button className="nav-link" onClick={() => setPagina('login')}>
+          Iniciar sesión
+        </button>
 
-    {paginaMostrada === 'carrito' && (
-      <Carrito carrito={carrito} quitar={quitarDelCarrito} irA={setPagina} />
-    )}
+        <button className="nav-link" onClick={() => setPagina('registro')}>
+          Registro
+        </button>
 
-    {paginaMostrada === 'finalizar' && (
-      <Finalizar carrito={carrito} vaciar={vaciarCarrito} irA={setPagina} usuarioActual={usuarioActual} />
-    )}
+        <button className="nav-link" onClick={() => setPagina('catalogo')}>
+          Catálogo
+        </button>
 
-    {paginaMostrada === 'promociones' && (
-      <section className="promociones">
-        <h2>🎉 Promociones especiales</h2>
-        <div className="rejilla">
-          <article className="tarjeta"><div className="tarjeta-img">✏️</div><h3>Lápices</h3><p>Precio especial: $10</p></article>
-          <article className="tarjeta"><div className="tarjeta-img">🖍️</div><h3>Colores</h3><p>Precio especial: $199</p></article>
-          <article className="tarjeta"><div className="tarjeta-img">📚</div><h3>Libretas</h3><p>Precio especial: $10</p></article>
-        </div>
-      </section>
-    )}
+        <button className="nav-link" onClick={() => setPagina('favoritos')}>
+          ❤️ Favoritos
+        </button>
 
-    {paginaMostrada === 'favoritos' && (
-      <section className="catalogo">
-        <h2 style={{ textAlign: 'center' }}>❤️ Mis favoritos</h2>
-        {favoritos.length === 0 ? (
-          <p className="vacio">Todavía no tienes favoritos.</p>
-        ) : (
-          <div className="rejilla">
-            {PRODUCTOS.filter((p) => favoritos.includes(p.id)).map((p) => (
-              <article className="tarjeta" key={p.id}>
-                <div className="tarjeta-img">
-                  <img src={p.imagen} alt={p.nombre} />
-                </div>
-                <p className="tarjeta-nombre">{p.nombre}</p>
-                <p className="tarjeta-precio">$ {p.precio}</p>
-                <button className="btn-carrito" onClick={() => agregarAlCarrito(p)}>
-                  🛒 Agregar
-                </button>
-                <button className="enlace" onClick={() => cambiarFavorito(p.id)}>
-                  Quitar de favoritos
-                </button>
-              </article>
-            ))}
-          </div>
+        <button className="nav-link" onClick={() => setPagina('promociones')}>
+          Promociones
+        </button>
+
+        <button className="nav-link" onClick={() => setPagina('contacto')}>
+          Contacto
+        </button>
+
+        <button className="nav-link" onClick={() => setPagina('carrito')}>
+          🛒 Carrito ({totalArticulos})
+        </button>
+      </nav>
+
+      <main>
+        {paginaMostrada === 'inicio' && (
+          <Inicio
+            usuario={usuarioActual}
+            irCatalogo={() => setPagina('catalogo')}
+          />
         )}
-      </section>
-    )}
-  </main>
 
-  <footer className="pie">© 2026 Papelería Arcoíris</footer>
-</div>
+        {paginaMostrada === 'login' && (
+          <Login
+            usuarios={usuarios}
+            setUsuarioActual={setUsuarioActual}
+            setPagina={setPagina}
+          />
+        )}
 
+        {paginaMostrada === 'registro' && (
+          <Registro
+            usuarios={usuarios}
+            setUsuarios={setUsuarios}
+            setUsuarioActual={setUsuarioActual}
+            setPagina={setPagina}
+          />
+        )}
 
-);
+        {paginaMostrada === 'catalogo' && (
+          <Catalogo
+            agregar={agregarAlCarrito}
+            favoritos={favoritos}
+            cambiarFavorito={cambiarFavorito}
+          />
+        )}
+
+        {paginaMostrada === 'carrito' && (
+          <Carrito
+            carrito={carrito}
+            quitar={quitarDelCarrito}
+            setPagina={setPagina}
+          />
+        )}
+
+        {paginaMostrada === 'finalizar' && (
+          <Finalizar
+            carrito={carrito}
+            vaciarCarrito={vaciarCarrito}
+            usuarioActual={usuarioActual}
+            setPagina={setPagina}
+          />
+        )}
+
+        {paginaMostrada === 'favoritos' && (
+          <section className="catalogo">
+            <h2>❤️ Mis favoritos</h2>
+
+            {favoritos.length === 0 ? (
+              <p className="vacio">Todavía no tienes favoritos.</p>
+            ) : (
+              <div className="rejilla">
+                {favoritos.map((p) => (
+                  <article className="tarjeta" key={p.id}>
+                    <div className="tarjeta-img">
+                      <img src={p.imagen} alt={p.nombre} />
+                    </div>
+
+                    <p className="tarjeta-nombre">{p.nombre}</p>
+                    <p className="tarjeta-precio">$ {p.precio}</p>
+
+                    <button
+                      className="btn-carrito"
+                      onClick={() => agregarAlCarrito(p)}
+                      disabled={p.stock === 0}
+                    >
+                      🛒 Agregar
+                    </button>
+
+                    <button
+                      className="btn-carrito"
+                      onClick={() => cambiarFavorito(p)}
+                    >
+                      Quitar favorito
+                    </button>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {paginaMostrada === 'promociones' && (
+          <section className="promociones">
+            <h2>🎉 Promociones</h2>
+
+            <div className="rejilla">
+              <article className="tarjeta">
+                <h3>Promoción de lápices</h3>
+                <p>Lápices a solo $10</p>
+              </article>
+
+              <article className="tarjeta">
+                <h3>Colores</h3>
+                <p>Cajas de colores a $199</p>
+              </article>
+
+              <article className="tarjeta">
+                <h3>Libretas</h3>
+                <p>Libretas a solo $10</p>
+              </article>
+            </div>
+          </section>
+        )}
+
+        {paginaMostrada === 'contacto' && <Contacto />}
+
+        {paginaMostrada === 'tramites' && (
+          <section>
+            <h2>Trámites</h2>
+            <p>Próximamente...</p>
+          </section>
+        )}
+      </main>
+
+      <footer className="pie">
+        <p>© 2026 Papelería Arcoíris</p>
+      </footer>
+
+    </div>
+  );
 }
 
 export default App;
