@@ -1,14 +1,20 @@
-function Inicio({ usuarioActual, irA }) {
+function Inicio({ usuario, irCatalogo }) {
   return (
     <section className="inicio">
-      <p className="inicio-saludo">
-        {usuarioActual ? `Bienvenido/a, ${usuarioActual.nombre}` : 'Bienvenido/a'}
-      </p>
+      {usuario ? (
+        <>
+          <h2>¡Bienvenido, {usuario.nombre}! 🌈</h2>
+          <p>Nos alegra tenerte de vuelta en Papelería Arcoíris.</p>
+        </>
+      ) : (
+        <>
+          <h2>Bienvenido a Papelería Arcoíris 🌈</h2>
+          <p>Todo lo que necesitas en un solo lugar.</p>
+        </>
+      )}
 
-      <h2 className="inicio-titulo">Papelería Arcoíris</h2>
-
-      <button className="btn" type="button" onClick={() => irA('catalogo')}>
-        ver catálogo
+      <button className="btn" onClick={irCatalogo}>
+        Ver catálogo
       </button>
     </section>
   );

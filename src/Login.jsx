@@ -1,58 +1,51 @@
-import { useState } from 'react';
+function Login({ usuarios, setUsuarioActual, setPagina }) {
+  const [correo, setCorreo] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState('');
 
-function Login({ irA, usuarios, setUsuarioActual }) {
-  const [datos, setDatos] = useState({ correo: '', contrasena: '' });
-  const [error, setError] = useState('');
-
-  const cambiar = (e) => {
-    setDatos({ ...datos, [e.target.name]: e.target.value });
-  };
-
-  const enviar = (e) => {
+  function iniciarSesion(e) {
     e.preventDefault();
 
-    const encontrado = usuarios.find(
-      (u) => u.correo === datos.correo && u.contrasena === datos.contrasena
+    const usuario = usuarios.find(
+      (u) => u.correo === correo && u.password === password
     );
 
-    if (!encontrado) {
-      setError('Correo o contraseña incorrectos.');
+    if (!usuario) {
+      setError('Correo o contraseña incorrectos');
       return;
     }
 
-    setError('');
-    setUsuarioActual(encontrado);
-    irA('catalogo');
-  };
+    setUsuarioActual(usuario);
+    setPagina('inicio');
+  }
 
   return (
     <section className="auth">
-      <div className="arco-form">
+      <form className="arco-form" onSubmit={iniciarSesion}>
         <h2>Iniciar sesión</h2>
 
-        <form onSubmit={enviar}>
-          <input
-            name="correo"
-            type="email"
-            placeholder="correo electrónico"
-            value={datos.correo}
-            onChange={cambiar}
-            required
-          />
-          <input
-            name="contrasena"
-            type="password"
-            placeholder="contraseña"
-            value={datos.contrasena}
-            onChange={cambiar}
-            required
-          />
+        {error && <p className="error">{error}</p>}
 
-          {error && <p className="error" role="alert">{error}</p>}
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          value={correo}
+          onChange={(e) => setCorreo(e.target.value)}
+          required
+        />
 
-          <button className="btn" type="submit">Iniciar</button>
-        </form>
-      </div>
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button className="btn" type="submit">
+          Entrar
+        </button>
+      </form>
     </section>
   );
 }
