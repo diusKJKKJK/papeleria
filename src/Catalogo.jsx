@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PRODUCTOS } from './productos';
 
-function Catalogo({ agregar }) {
+function Catalogo({ agregar, favoritos = [], cambiarFavorito = () => {} }) {
 const [busqueda, setBusqueda] = useState('');
 const [precioMaximo, setPrecioMaximo] = useState('');
 
@@ -21,11 +21,7 @@ onChange={(e) => setBusqueda(e.target.value)}
 ```
   <div className="filtro-precio">
     <label htmlFor="precioMaximo">Precio máximo:</label>
-    <select
-      id="precioMaximo"
-      value={precioMaximo}
-      onChange={(e) => setPrecioMaximo(e.target.value)}
-    >
+    <select id="precioMaximo" value={precioMaximo} onChange={(e) => setPrecioMaximo(e.target.value)}>
       <option value="">Todos los precios</option>
       <option value="10">Hasta $10</option>
       <option value="50">Hasta $50</option>
@@ -34,32 +30,24 @@ onChange={(e) => setBusqueda(e.target.value)}
     </select>
   </div>
 
-  {filtrados.length === 0 && (
-    <p className="vacio">No encontramos productos con esos filtros.</p>
-  )}
+  {filtrados.length === 0 && <p className="vacio">No encontramos productos.</p>}
 
   <div className="rejilla">
     {filtrados.map((p) => (
       <article className="tarjeta" key={p.id}>
         <div className="tarjeta-img">
-          <img
-            src={p.imagen}
-            alt={p.nombre}
-            onError={(e) => {
-              e.target.style.display = 'none';
-            }}
-          />
+          <img src={p.imagen} alt={p.nombre} onError={(e) => { e.target.style.display = 'none'; }} />
         </div>
 
         <p className="tarjeta-nombre">{p.nombre}</p>
         <p className="tarjeta-precio">$ {p.precio}</p>
 
-        <button
-          className="btn-carrito"
-          type="button"
-          onClick={() => agregar(p)}
-        >
+        <button className="btn-carrito" onClick={() => agregar(p)}>
           🛒 Agregar
+        </button>
+
+        <button className="enlace" onClick={() => cambiarFavorito(p.id)}>
+          {favoritos.includes(p.id) ? '❤️ Quitar favorito' : '🤍 Agregar favorito'}
         </button>
       </article>
     ))}
