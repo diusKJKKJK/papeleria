@@ -451,3 +451,47 @@ main {
   gap: 0.5rem;
   margin-top: 1.5rem;
 }
+.promociones {
+max-width: 1000px;
+margin: 0 auto;
+text-align: center;
+}
+
+.promociones h2 {
+color: var(--naranja);
+font-family: var(--fuente-titulo);
+font-size: 2.5rem;
+}
+
+.promociones .tarjeta {
+background: #f5e0e0;
+padding: 1rem;
+border-radius: 25px;
+}
+
+.promociones .tarjeta h3,
+.promociones .tarjeta p {
+color: #000;
+}
+
+.promociones .tarjeta p {
+font-weight: 700;
+}
+.filtro-precio {
+max-width: 1000px;
+margin: 0 auto 1.5rem;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 1rem;
+font-weight: 700;
+}
+
+.filtro-precio select {
+padding: 0.7rem 1rem;
+border: 2px solid #e3a98a;
+border-radius: 999px;
+background: #f5e0e0;
+font-family: var(--fuente);
+font-weight: 700;
+}
