@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 function Registro({ irA, usuarios, setUsuarios, setUsuarioActual }) {
   const [datos, setDatos] = useState({
     nombre: '',
     correo: '',
     contrasena: '',
-    confirma: '',
+    confirma: ''
   });
+
   const [error, setError] = useState('');
 
   const cambiar = (e) => {
-    setDatos({ ...datos, [e.target.name]: e.target.value });
+    setDatos({
+      ...datos,
+      [e.target.name]: e.target.value
+    });
   };
 
   const enviar = (e) => {
@@ -21,7 +25,9 @@ function Registro({ irA, usuarios, setUsuarios, setUsuarioActual }) {
       return;
     }
 
-    const yaExiste = usuarios.some((u) => u.correo === datos.correo);
+    const yaExiste = usuarios.some(
+      (usuario) => usuario.correo === datos.correo
+    );
 
     if (yaExiste) {
       setError('Ese correo ya tiene una cuenta.');
@@ -31,10 +37,10 @@ function Registro({ irA, usuarios, setUsuarios, setUsuarioActual }) {
     const nuevo = {
       nombre: datos.nombre,
       correo: datos.correo,
-      contrasena: datos.contrasena,
+      contrasena: datos.contrasena
     };
 
-    setUsuarios([...usuarios, nuevo]);
+    setUsuarios((actuales) => [...actuales, nuevo]);
     setUsuarioActual(nuevo);
     setError('');
     irA('inicio');
@@ -43,47 +49,60 @@ function Registro({ irA, usuarios, setUsuarios, setUsuarioActual }) {
   return (
     <section className="auth">
       <div className="arco-form">
-        <h2>crear cuenta</h2>
+        <h2>Crear cuenta</h2>
 
         <form onSubmit={enviar}>
           <input
             name="nombre"
-            placeholder="nombre"
+            placeholder="Nombre"
             value={datos.nombre}
             onChange={cambiar}
             required
           />
+
           <input
             name="correo"
             type="email"
-            placeholder="correo electrónico"
+            placeholder="Correo electrónico"
             value={datos.correo}
             onChange={cambiar}
             required
           />
+
           <input
             name="contrasena"
             type="password"
-            placeholder="contraseña"
+            placeholder="Contraseña"
             value={datos.contrasena}
             onChange={cambiar}
             required
           />
+
           <input
             name="confirma"
             type="password"
-            placeholder="confirma contraseña"
+            placeholder="Confirma contraseña"
             value={datos.confirma}
             onChange={cambiar}
             required
           />
 
-          {error && <p className="error" role="alert">{error}</p>}
+          {error && (
+            <p className="error" role="alert">
+              {error}
+            </p>
+          )}
 
-          <button className="btn" type="submit">crear cuenta</button>
+          <button className="btn" type="submit">
+            Crear cuenta
+          </button>
         </form>
 
-        <button className="enlace" type="button" onClick={() => irA('login')}>
+        <button
+          className="enlace"
+          type="button"
+          onClick={() => irA('login')}
+        >
           ¿Ya tienes cuenta? Inicia sesión
         </button>
       </div>

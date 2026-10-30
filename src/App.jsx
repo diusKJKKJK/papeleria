@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { PRODUCTOS } from './productos';
 
 import Registro from './Registro';
@@ -22,6 +22,7 @@ function App() {
     'catalogo',
     'carrito',
     'finalizar',
+    'favoritos',
     'tramites'
   ];
 
@@ -31,7 +32,7 @@ function App() {
       : pagina;
 
   function agregarAlCarrito(producto) {
-    if (producto.stock === 0) return;
+    if (producto.stock <= 0) return;
 
     setCarrito((actual) => {
       const existe = actual.find((p) => p.id === producto.id);
@@ -58,22 +59,30 @@ function App() {
     setCarrito([]);
   }
 
-  function cambiarFavorito(producto) {
+  function cambiarFavorito(id) {
     setFavoritos((actual) =>
-      actual.some((p) => p.id === producto.id)
-        ? actual.filter((p) => p.id !== producto.id)
-        : [...actual, producto]
+      actual.includes(id)
+        ? actual.filter((favorito) => favorito !== id)
+        : [...actual, id]
     );
   }
 
+  function cerrarSesion() {
+    setUsuarioActual(null);
+    setPagina('login');
+  }
+
   const totalArticulos = carrito.reduce(
-    (total, p) => total + p.cantidad,
+    (total, producto) => total + producto.cantidad,
     0
+  );
+
+  const productosFavoritos = PRODUCTOS.filter((producto) =>
+    favoritos.includes(producto.id)
   );
 
   return (
     <div className="app">
-
       <header className="banner">
         <h1>🌈 PAPELERÍA ARCOÍRIS</h1>
         <p>Todo lo que necesitas en un solo lugar</p>
@@ -84,13 +93,21 @@ function App() {
           Inicio
         </button>
 
-        <button className="nav-link" onClick={() => setPagina('login')}>
-          Iniciar sesión
-        </button>
+        {!usuarioActual ? (
+          <>
+            <button className="nav-link" onClick={() => setPagina('login')}>
+              Iniciar sesión
+            </button>
 
-        <button className="nav-link" onClick={() => setPagina('registro')}>
-          Registro
-        </button>
+            <button className="nav-link" onClick={() => setPagina('registro')}>
+              Registro
+            </button>
+          </>
+        ) : (
+          <button className="nav-link" onClick={cerrarSesion}>
+            Cerrar sesión
+          </button>
+        )}
 
         <button className="nav-link" onClick={() => setPagina('catalogo')}>
           Catálogo
@@ -134,7 +151,7 @@ function App() {
             usuarios={usuarios}
             setUsuarios={setUsuarios}
             setUsuarioActual={setUsuarioActual}
-            setPagina={setPagina}
+            irA={setPagina}
           />
         )}
 
@@ -157,9 +174,9 @@ function App() {
         {paginaMostrada === 'finalizar' && (
           <Finalizar
             carrito={carrito}
-            vaciarCarrito={vaciarCarrito}
+            vaciar={vaciarCarrito}
+            irA={setPagina}
             usuarioActual={usuarioActual}
-            setPagina={setPagina}
           />
         )}
 
@@ -167,30 +184,30 @@ function App() {
           <section className="catalogo">
             <h2>❤️ Mis favoritos</h2>
 
-            {favoritos.length === 0 ? (
+            {productosFavoritos.length === 0 ? (
               <p className="vacio">Todavía no tienes favoritos.</p>
             ) : (
               <div className="rejilla">
-                {favoritos.map((p) => (
-                  <article className="tarjeta" key={p.id}>
+                {productosFavoritos.map((producto) => (
+                  <article className="tarjeta" key={producto.id}>
                     <div className="tarjeta-img">
-                      <img src={p.imagen} alt={p.nombre} />
+                      <img src={producto.imagen} alt={producto.nombre} />
                     </div>
 
-                    <p className="tarjeta-nombre">{p.nombre}</p>
-                    <p className="tarjeta-precio">$ {p.precio}</p>
+                    <p className="tarjeta-nombre">{producto.nombre}</p>
+                    <p className="tarjeta-precio">$ {producto.precio}</p>
 
                     <button
                       className="btn-carrito"
-                      onClick={() => agregarAlCarrito(p)}
-                      disabled={p.stock === 0}
+                      onClick={() => agregarAlCarrito(producto)}
+                      disabled={producto.stock <= 0}
                     >
-                      🛒 Agregar
+                      {producto.stock <= 0 ? 'Agotado' : '🛒 Agregar'}
                     </button>
 
                     <button
-                      className="btn-carrito"
-                      onClick={() => cambiarFavorito(p)}
+                      className="enlace"
+                      onClick={() => cambiarFavorito(producto.id)}
                     >
                       Quitar favorito
                     </button>
@@ -237,7 +254,6 @@ function App() {
       <footer className="pie">
         <p>© 2026 Papelería Arcoíris</p>
       </footer>
-
     </div>
   );
 }

@@ -1,77 +1,83 @@
-import { useState } from 'react';
-import { PRODUCTOS } from './productos';
+import React from 'react';
 
-function Catalogo({ agregar, favoritos = [], cambiarFavorito = () => {} }) {
-const [busqueda, setBusqueda] = useState('');
-const [precioMaximo, setPrecioMaximo] = useState('');
-const [categoria, setCategoria] = useState('');
+function Carrito({ carrito, quitar, setPagina }) {
+  const total = carrito.reduce(
+    (suma, producto) => suma + producto.precio * producto.cantidad,
+    0
+  );
 
-const filtrados = PRODUCTOS.filter((p) =>
-p.nombre.toLowerCase().includes(busqueda.toLowerCase()) &&
-(precioMaximo === '' || p.precio <= Number(precioMaximo)) &&
-(categoria === '' || p.categoria === categoria)
-);
+  return (
+    <section className="carrito">
+      <h2>🛒 Mi carrito</h2>
 
-return ( <section className="catalogo"> <div className="buscador">
-<input
-type="search"
-placeholder="Buscar productos"
-value={busqueda}
-onChange={(e) => setBusqueda(e.target.value)}
-/> </div>
+      {carrito.length === 0 ? (
+        <>
+          <p className="vacio">Tu carrito está vacío.</p>
 
-```
-  <div className="filtro-precio">
-    <label htmlFor="categoria">Categoría:</label>
-    <select id="categoria" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-      <option value="">Todas las categorías</option>
-      <option value="Adhesivos">Adhesivos</option>
-      <option value="Accesorios">Accesorios</option>
-      <option value="Escritura">Escritura</option>
-      <option value="Papelería">Papelería</option>
-      <option value="Arte">Arte</option>
-      <option value="Geometría">Geometría</option>
-    </select>
+          <div className="carrito-centro">
+            <button
+              className="btn"
+              onClick={() => setPagina('catalogo')}
+            >
+              Ver catálogo
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <ul className="carrito-lista">
+            {carrito.map((producto) => (
+              <li key={producto.id}>
+                <div className="carrito-foto">
+                  <img src={producto.imagen} alt={producto.nombre} />
+                </div>
 
-    <label htmlFor="precioMaximo">Precio máximo:</label>
-    <select id="precioMaximo" value={precioMaximo} onChange={(e) => setPrecioMaximo(e.target.value)}>
-      <option value="">Todos los precios</option>
-      <option value="10">Hasta $10</option>
-      <option value="50">Hasta $50</option>
-      <option value="100">Hasta $100</option>
-      <option value="200">Hasta $200</option>
-    </select>
-  </div>
+                <span>{producto.nombre}</span>
 
-  {filtrados.length === 0 && (
-    <p className="vacio">No encontramos productos.</p>
-  )}
+                <span>
+                  {producto.cantidad} × ${producto.precio}
+                </span>
 
-  <div className="rejilla">
-    {filtrados.map((p) => (
-      <article className="tarjeta" key={p.id}>
-        <div className="tarjeta-img">
-          <img src={p.imagen} alt={p.nombre} onError={(e) => { e.target.style.display = 'none'; }} />
-        </div>
+                <strong>
+                  $ {producto.cantidad * producto.precio}
+                </strong>
 
-        <p className="tarjeta-nombre">{p.nombre}</p>
-        <p>{p.categoria}</p>
-        <p className="tarjeta-precio">$ {p.precio}</p>
+                <button
+                  className="carrito-quitar"
+                  onClick={() => quitar(producto.id)}
+                  aria-label={`Quitar ${producto.nombre}`}
+                >
+                  🗑️
+                </button>
+              </li>
+            ))}
+          </ul>
 
-        <button className="btn-carrito" onClick={() => agregar(p)}>
-          🛒 Agregar
-        </button>
+          <h3 className="carrito-total">
+            Total: $ {total}
+          </h3>
 
-        <button className="enlace" onClick={() => cambiarFavorito(p.id)}>
-          {favoritos.includes(p.id) ? '❤️ Quitar favorito' : '🤍 Agregar favorito'}
-        </button>
-      </article>
-    ))}
-  </div>
-</section>
+          <div className="carrito-acciones">
+            <button
+              className="btn"
+              onClick={() => setPagina('finalizar')}
+            >
+              Finalizar compra
+            </button>
+          </div>
 
-
-);
+          <div className="carrito-centro">
+            <button
+              className="enlace"
+              onClick={() => setPagina('catalogo')}
+            >
+              Seguir comprando
+            </button>
+          </div>
+        </>
+      )}
+    </section>
+  );
 }
 
-export default Catalogo;
+export default Carrito;

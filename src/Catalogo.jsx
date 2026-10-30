@@ -1,22 +1,23 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { PRODUCTOS } from './productos';
 
-function Catalogo({ agregar, favoritos = [], cambiarFavorito = () => {} }) {
+function Catalogo({
+  agregar,
+  favoritos = [],
+  cambiarFavorito = () => {}
+}) {
   const [busqueda, setBusqueda] = useState('');
-  const [categoria, setCategoria] = useState('Todas');
-  const [precioMaximo, setPrecioMaximo] = useState('Todos');
+  const [precioMaximo, setPrecioMaximo] = useState('');
+  const [categoria, setCategoria] = useState('');
 
-  const filtrados = PRODUCTOS.filter((p) => {
-    const coincideNombre = p.nombre.toLowerCase().includes(busqueda.toLowerCase());
-    const coincideCategoria = categoria === 'Todas' || p.categoria === categoria;
-    const coincidePrecio = precioMaximo === 'Todos' || p.precio <= Number(precioMaximo);
-
-    return coincideNombre && coincideCategoria && coincidePrecio;
-  });
+  const filtrados = PRODUCTOS.filter((producto) =>
+    producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) &&
+    (precioMaximo === '' || producto.precio <= Number(precioMaximo)) &&
+    (categoria === '' || producto.categoria === categoria)
+  );
 
   return (
     <section className="catalogo">
-
       <div className="buscador">
         <input
           type="search"
@@ -27,9 +28,14 @@ function Catalogo({ agregar, favoritos = [], cambiarFavorito = () => {} }) {
       </div>
 
       <div className="filtro-precio">
-        <label>Categoría:</label>
-        <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-          <option value="Todas">Todas</option>
+        <label htmlFor="categoria">Categoría:</label>
+
+        <select
+          id="categoria"
+          value={categoria}
+          onChange={(e) => setCategoria(e.target.value)}
+        >
+          <option value="">Todas las categorías</option>
           <option value="Adhesivos">Adhesivos</option>
           <option value="Accesorios">Accesorios</option>
           <option value="Escritura">Escritura</option>
@@ -38,13 +44,18 @@ function Catalogo({ agregar, favoritos = [], cambiarFavorito = () => {} }) {
           <option value="Geometría">Geometría</option>
         </select>
 
-        <label>Precio máximo:</label>
-        <select value={precioMaximo} onChange={(e) => setPrecioMaximo(e.target.value)}>
-          <option value="Todos">Todos</option>
-          <option value="10">$10</option>
-          <option value="50">$50</option>
-          <option value="100">$100</option>
-          <option value="200">$200</option>
+        <label htmlFor="precioMaximo">Precio máximo:</label>
+
+        <select
+          id="precioMaximo"
+          value={precioMaximo}
+          onChange={(e) => setPrecioMaximo(e.target.value)}
+        >
+          <option value="">Todos los precios</option>
+          <option value="10">Hasta $10</option>
+          <option value="50">Hasta $50</option>
+          <option value="100">Hasta $100</option>
+          <option value="200">Hasta $200</option>
         </select>
       </div>
 
@@ -53,37 +64,43 @@ function Catalogo({ agregar, favoritos = [], cambiarFavorito = () => {} }) {
       )}
 
       <div className="rejilla">
-        {filtrados.map((p) => (
-          <article className="tarjeta" key={p.id}>
+        {filtrados.map((producto) => (
+          <article className="tarjeta" key={producto.id}>
             <div className="tarjeta-img">
-              <img src={p.imagen} alt={p.nombre} />
+              <img
+                src={producto.imagen}
+                alt={producto.nombre}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
             </div>
 
-            <p className="tarjeta-nombre">{p.nombre}</p>
-            <p className="tarjeta-precio">$ {p.precio}</p>
-            <p>{p.categoria}</p>
+            <p className="tarjeta-nombre">{producto.nombre}</p>
+            <p>{producto.categoria}</p>
+            <p className="tarjeta-precio">$ {producto.precio}</p>
 
-            <p style={{ color: p.stock > 0 ? 'green' : 'red', fontWeight: 'bold' }}>
-              {p.stock > 0 ? `Disponible: ${p.stock} unidades` : 'Agotado'}
+            <p>
+              {producto.stock > 0
+                ? `Disponibles: ${producto.stock}`
+                : 'Producto agotado'}
             </p>
 
             <button
               className="btn-carrito"
-              type="button"
-              disabled={p.stock === 0}
-              onClick={() => agregar(p)}
+              onClick={() => agregar(producto)}
+              disabled={producto.stock <= 0}
             >
-              {p.stock > 0 ? '🛒 Agregar' : 'No disponible'}
+              {producto.stock <= 0 ? 'Agotado' : '🛒 Agregar'}
             </button>
 
             <button
-              className="btn-carrito"
-              type="button"
-              onClick={() => cambiarFavorito(p)}
+              className="enlace"
+              onClick={() => cambiarFavorito(producto.id)}
             >
-              {favoritos.some((f) => f.id === p.id)
+              {favoritos.includes(producto.id)
                 ? '❤️ Quitar favorito'
-                : '🤍 Favorito'}
+                : '🤍 Agregar favorito'}
             </button>
           </article>
         ))}

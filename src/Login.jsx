@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 function Login({ usuarios, setUsuarioActual, setPagina }) {
   const [correo, setCorreo] = useState('');
@@ -9,14 +9,15 @@ function Login({ usuarios, setUsuarioActual, setPagina }) {
     e.preventDefault();
 
     const usuario = usuarios.find(
-      (u) => u.correo === correo && u.password === password
+      (u) => u.correo === correo && u.contrasena === password
     );
 
     if (!usuario) {
-      setError('Correo o contraseña incorrectos');
+      setError('Correo o contraseña incorrectos.');
       return;
     }
 
+    setError('');
     setUsuarioActual(usuario);
     setPagina('inicio');
   }
