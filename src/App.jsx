@@ -3,7 +3,7 @@ import './App.css';
 import Registro from './Registro';
 import Login from './Login';
 import Catalogo from './Catalogo';
-import Inicio from './Inicio';
+import Inicio from './inicio';
 import Carrito from './Carrito';
 import Finalizar from './Finalizar';
 
