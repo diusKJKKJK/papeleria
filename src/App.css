@@ -1,0 +1,453 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Quicksand:wght@500;700&display=swap');
+ 
+/* VARIABLES: colores y fuentes con nombre, se usan con var(--nombre) */
+:root {
+  --banner: #f4ebbc;
+  --nav: #f9f3d9;
+  --rosa: #f472b6;
+  --naranja: #e8a373;
+  --verde: #8fdc6b;
+  --azul: #7dbde8;
+  --rosa-claro: #ffd0ea;
+  --durazno: #ffdfcf;
+  --lima: #b3ec86;
+  --gris: #f3f3f3;
+  --texto: #1a1a1a;
+
+  --fuente: 'Quicksand', 'Segoe UI', sans-serif;
+  --fuente-titulo: 'Fredoka', 'Trebuchet MS', sans-serif;
+}
+/* Hace que el padding y el borde cuenten dentro del tamaño de las cajas */
+* {
+  box-sizing: border-box;
+}
+ 
+/* Fondo y letra de toda la página, sin el margen blanco del navegador */
+body {
+  margin: 0;
+  font-family: var(--fuente);
+  color: var(--texto);
+  background: #fcfcfa;
+}
+ 
+/* Caja que envuelve toda la página (banner, menú, contenido y pie) */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+ 
+/* Zona del centro: ocupa el espacio sobrante y empuja el pie hacia abajo */
+main {
+  flex: 1;
+  padding: 2rem;
+}
+ 
+/* BANNER: franja de arriba */
+.banner {
+  background: var(--banner);
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+ 
+.banner h1 {
+  margin: 0;
+  color: #f8d4d4;
+  font-weight: 500;
+  font-size: 1.8rem;
+  letter-spacing: 0.4em;
+  text-shadow: 0 1px 3px rgba(240, 230, 230, 0.25);
+}
+ 
+/* MENÚ: barra con forma de píldora */
+.nav {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 1.5rem 2rem 0;
+  padding: 0.7rem 2rem;
+  background: var(--nav);
+  border-radius: 999px;
+}
+ 
+/* Molde de todos los botones del menú (se ven como texto) */
+.nav-link {
+  background: none;
+  border: 0;
+  padding: 0.4rem 0.8rem;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+ 
+/* Color de letra de cada botón del menú */
+.nav-link.rosa { color: var(--rosa); }
+.nav-link.naranja { color: var(--naranja); }
+.nav-link.verde { color: var(--verde); }
+.nav-link.azul { color: var(--azul); }
+.nav-link.morado { color: #a855f7; }
+.nav-link.celeste { color: #38bdf8; }
+ 
+/* PIE DE PÁGINA */
+.pie {
+  text-align: center;
+  padding: 1.2rem;
+  background: var(--banner);
+  font-weight: 700;
+}
+ 
+/* INICIO: saludo, título grande y botón */
+.inicio {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+ 
+.inicio-saludo {
+  margin: 0;
+  color: #000;
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+ 
+.inicio-titulo {
+  margin: 0.5rem 0 2rem;
+  color: var(--naranja);
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  font-size: clamp(3rem, 10vw, 7rem);
+  line-height: 1;
+}
+ 
+/* LOGIN Y REGISTRO: centra la tarjeta en la pantalla */
+.auth {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 2rem;
+}
+ 
+/* Tarjeta con forma de arco, con las letras en negro */
+.arco-form {
+  width: min(100%, 520px);
+  padding: 2.5rem;
+  border: 3px solid #cc109d;
+  border-radius: 260px 260px 24px 24px;
+  background: #fad7ec;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+ 
+.arco-form h2 {
+  margin: 1rem 0;
+  font-size: 2rem;
+  color: #000;
+}
+ 
+/* Formulario: las cajitas una debajo de otra */
+.arco-form form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+ 
+/* Cajitas para escribir */
+.arco-form input {
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.9rem 1.3rem;
+  background: #e9e6e4;
+  color: #000;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+ 
+.arco-form input::placeholder {
+  color: #c4abab;
+}
+ 
+/* Botón principal */
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.9rem 3rem;
+  background: #f085ba;
+  color: #000;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+ 
+/* Botón que parece enlace subrayado */
+.enlace {
+  background: none;
+  border: 0;
+  margin-top: 1rem;
+  color: #000;
+  font-family: var(--fuente);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+ 
+/* Mensaje de error */
+.error {
+  color: #c0392b;
+  font-weight: 700;
+  margin: 0;
+}
+ 
+/* CATÁLOGO: barra del buscador */
+.buscador {
+  max-width: 1000px;
+  margin: 0 auto 2rem;
+  padding: 0.4rem 1.4rem;
+  border: 3px solid #cdc3c6;
+  border-radius: 999px;
+  background: #f5e0e0;
+}
+ 
+.buscador input {
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 0.5rem;
+  color: #000;
+  font-family: var(--fuente);
+  font-size: 1.2rem;
+  outline: none;
+}
+ 
+/* Rejilla de productos: tantas columnas como quepan */
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.6rem 1.2rem;
+}
+ 
+/* Cada producto: imagen, nombre, precio y botón en columna */
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+ 
+/* Cuadro de la imagen del producto */
+.tarjeta-img {
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 4px solid #e3a98a;
+  border-radius: 26px;
+  background: #fff;          /* mismo blanco que las fotos */
+  font-size: 4rem;
+}
+ 
+/* Imagen real: llena todo el marco */
+.tarjeta-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0;                /* sin margen interno */
+  display: block;
+}
+ 
+.tarjeta-nombre {
+  margin: 0.5rem 0 0;
+  font-size: 1.1rem;
+  text-align: center;
+}
+ 
+.tarjeta-precio {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+ 
+/* Textos del catálogo en negro para que se lean */
+.tarjeta-nombre,
+.tarjeta-precio,
+.vacio {
+  color: #000;
+}
+ 
+/* Aviso cuando la búsqueda no encuentra nada */
+.vacio {
+  text-align: center;
+  font-size: 1.2rem;
+}
+ 
+/* BOTÓN AGREGAR AL CARRITO (en cada tarjeta) */
+.btn-carrito {
+  margin-top: 0.6rem;
+  padding: 0.5rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: #f085ba;
+  color: #000;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+ 
+.btn-carrito:hover {
+  background: #e9709f;
+}
+ 
+/* PANTALLA DEL CARRITO */
+.carrito {
+  max-width: 800px;
+  margin: 0 auto;
+  color: #000;
+}
+ 
+.carrito-centro {
+  display: flex;
+  justify-content: center;
+}
+ 
+.carrito-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+ 
+.carrito-lista li {
+  display: grid;
+  grid-template-columns: 4rem 1fr auto auto auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.6rem 1.4rem;
+  background: #f5e0e0;
+  border-radius: 999px;
+  font-size: 1.2rem;
+}
+ 
+.carrito-foto {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+}
+ 
+.carrito-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+ 
+.carrito-quitar {
+  background: none;
+  border: 0;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+ 
+.carrito-total {
+  text-align: right;
+  font-size: 1.6rem;
+}
+.carrito h2 {
+  text-align: center;
+}
+/* CARRITO: zona del botón finalizar compra */
+.carrito h2 {
+  text-align: center;
+}
+
+.carrito-acciones {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+/* PANTALLA FINALIZAR COMPRA */
+.finalizar {
+  max-width: 700px;
+  margin: 0 auto;
+  color: #000;
+}
+
+.finalizar h2 {
+  text-align: center;
+}
+
+.finalizar h3 {
+  margin: 0 0 0.8rem;
+}
+
+.finalizar-texto {
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.finalizar-resumen,
+.finalizar-form {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem 2rem;
+  background: #f5e0e0;
+  border-radius: 30px;
+}
+
+.finalizar-resumen ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.finalizar-resumen li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  font-size: 1.15rem;
+}
+
+.finalizar-total {
+  text-align: right;
+  margin: 0.8rem 0 0;
+  font-size: 1.5rem;
+}
+
+.finalizar-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.finalizar-form input,
+.finalizar-form select {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1.2rem;
+  background: #fff;
+  color: #000;
+  font-family: var(--fuente);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.finalizar-botones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
