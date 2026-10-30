@@ -27,7 +27,17 @@ function Catalogo({ agregar }) {
         {filtrados.map((p) => (
           <article className="tarjeta" key={p.id}>
             <div className="tarjeta-img">
-              {p.imagen ? <img src={p.imagen} alt={p.nombre} /> : p.emoji}
+              <img
+  src={p.imagen}
+  alt={p.nombre}
+  onError={(e) => {
+    console.log("Error cargando:", e.target.src);
+    e.target.style.display = "none";
+  }}
+  onLoad={(e) => {
+    console.log("Imagen cargada:", e.target.src);
+  }}
+/>
             </div>
             <p className="tarjeta-nombre">{p.nombre}</p>
             <p className="tarjeta-precio">$ {p.precio}</p>
