@@ -10,8 +10,32 @@ function Catalogo({
   const [precioMaximo, setPrecioMaximo] = useState('');
   const [categoria, setCategoria] = useState('');
 
+  // Ignora mayúsculas, acentos y plurales (lapices → lápiz)
+  const normalizar = (texto) =>
+    texto
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+
+  const singular = (palabra) => {
+    if (palabra.length <= 3) return palabra;
+    if (palabra.endsWith('ces')) return palabra.slice(0, -3) + 'z';
+    if (palabra.endsWith('es')) return palabra.slice(0, -2);
+    if (palabra.endsWith('s')) return palabra.slice(0, -1);
+    return palabra;
+  };
+
+  const termino = normalizar(busqueda);
+  const terminoSingular = singular(termino);
+
+  const coincide = (producto) => {
+    const texto = normalizar(`${producto.nombre} ${producto.categoria}`);
+    return texto.includes(termino) || texto.includes(terminoSingular);
+  };
+
   const filtrados = PRODUCTOS.filter((producto) =>
-    producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) &&
+    coincide(producto) &&
     (precioMaximo === '' || producto.precio <= Number(precioMaximo)) &&
     (categoria === '' || producto.categoria === categoria)
   );
