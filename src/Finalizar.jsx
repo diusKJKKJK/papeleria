@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PRODUCTOS } from './productos';
+import { supabase } from './supabase';
 
 function Finalizar({ carrito, vaciar, irA, usuarioActual }) {
   const [datos, setDatos] = useState({
@@ -24,15 +25,54 @@ function Finalizar({ carrito, vaciar, irA, usuarioActual }) {
     setDatos({ ...datos, [e.target.name]: e.target.value });
   };
 
-  const enviar = (e) => {
+  const [error, setError] = useState('');
+  const [enviando, setEnviando] = useState(false);
+
+  const enviar = async (e) => {
     e.preventDefault();
+    setEnviando(true);
+    setError('');
 
-    setPedido({
-      numero: Math.floor(10000 + Math.random() * 90000),
-      nombre: datos.nombre,
-      total: total,
-    });
+    const numero = Math.floor(10000 + Math.random() * 90000);
 
+    const { data, error: errPedido } = await supabase
+      .from('pedidos')
+      .insert({
+        user_id: usuarioActual.id,
+        numero,
+        nombre: datos.nombre,
+        telefono: datos.telefono,
+        direccion: datos.direccion,
+        pago: datos.pago,
+        total
+      })
+      .select('id')
+      .single();
+
+    if (errPedido) {
+      setError('No se pudo guardar tu pedido. Intenta de nuevo.');
+      setEnviando(false);
+      return;
+    }
+
+    const { error: errItems } = await supabase.from('pedido_items').insert(
+      lineas.map((l) => ({
+        pedido_id: data.id,
+        producto_id: l.id,
+        nombre: l.producto.nombre,
+        precio: l.producto.precio,
+        cantidad: l.cantidad
+      }))
+    );
+
+    setEnviando(false);
+
+    if (errItems) {
+      setError('No se pudo guardar el detalle del pedido.');
+      return;
+    }
+
+    setPedido({ numero, nombre: datos.nombre, total });
     vaciar();
   };
 
@@ -43,8 +83,8 @@ function Finalizar({ carrito, vaciar, irA, usuarioActual }) {
         <p className="finalizar-texto">Tu número de pedido es #{pedido.numero}</p>
         <p className="finalizar-texto">Total: $ {pedido.total}</p>
         <div className="carrito-centro">
-          <button className="btn" type="button" onClick={() => irA('inicio')}>
-            volver al inicio
+          <button className="btn" type="button" onClick={() => irA('catalogo')}>
+            seguir comprando
           </button>
         </div>
       </section>
@@ -133,8 +173,9 @@ function Finalizar({ carrito, vaciar, irA, usuarioActual }) {
         </label>
 
         <div className="finalizar-botones">
-          <button className="btn" type="submit">
-            confirmar pedido
+          {error && <p className="error" role="alert">{error}</p>}
+          <button className="btn" type="submit" disabled={enviando}>
+            {enviando ? 'guardando…' : 'confirmar pedido'}
           </button>
           <button
             className="enlace"

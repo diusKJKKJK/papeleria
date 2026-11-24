@@ -18,6 +18,24 @@ function Catalogo({
 
   return (
     <section className="catalogo">
+      <div className="hero">
+        <span className="hero-etiqueta">✨ Nueva colección</span>
+        <p className="hero-titulo">Todo para crear, escribir y soñar</p>
+        <p className="hero-texto">
+          Útiles escolares y de arte con estilo, a precios que sí te gustan.
+        </p>
+      </div>
+
+      <div className="cinta" aria-hidden="true">
+        <div className="cinta-pista">
+          {[0, 1].map((i) => (
+            <span key={i}>
+              ✦ Envíos rápidos ✦ Precios bajos ✦ Calidad escolar ✦ Arte y creatividad
+            </span>
+          ))}
+        </div>
+      </div>
+
       <div className="buscador">
         <input
           type="search"
@@ -74,6 +92,11 @@ function Catalogo({
                   e.currentTarget.style.display = 'none';
                 }}
               />
+              {producto.stock <= 0 ? (
+                <span className="etiqueta agotado">Agotado</span>
+              ) : producto.stock <= 5 ? (
+                <span className="etiqueta pocas">Últimas piezas</span>
+              ) : null}
             </div>
 
             <p className="tarjeta-nombre">{producto.nombre}</p>
