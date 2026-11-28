@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Contacto() {
+lfunction Contacto() {
   return (
     <section className="contacto">
       <h2>📍 Contáctanos</h2>

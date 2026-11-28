@@ -165,7 +165,8 @@ function App() {
         </button>
 
         <h1 className="marca" onClick={() => irA('catalogo')}>
-          🌈 PAPELERÍA ARCOÍRIS
+          <span className="marca-icono" aria-hidden="true">🌈</span>
+          <span className="marca-texto">PAPELERÍA ARCOÍRIS</span>
         </h1>
 
         <button className="carrito-btn" onClick={() => irA('carrito')}>
